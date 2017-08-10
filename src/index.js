@@ -36,6 +36,7 @@ const pathToRegexp = require('path-to-regexp');
  */
 class MegaRouter {
   constructor(methods=['GET','HEAD','POST','PUT','DELETE','CONNECT','OPTIONS','TRACE','PATCH']) {
+    methods.push('ALL');
     this.routes = {};
     methods.forEach(method => {
       this.addMethod(method);
@@ -133,6 +134,13 @@ class MegaRouter {
       this._middleware = (req, res, next) => {
         let targets = [];
         let targetsIndex = 0;
+        // Check the "ALL" route
+        for (let i = 0; i < this.routes.ALL.length; i++) {
+          if (this.routes.ALL[i].route.test(req.url)) {
+            targets.push(this.routes.ALL[i].cb);
+          }
+        }
+        // Check the method route
         if (this.routes[req.method]) {
           for (let i = 0; i < this.routes[req.method].length; i++) {
             if (this.routes[req.method][i].route.test(req.url)) {
