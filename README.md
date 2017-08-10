@@ -15,6 +15,17 @@ Uses Babel for transpiling ES6 into ES5.
     const app = express();
     app.use(megaRouter.middleware);
 
+### Basic route
+    megaRouter.get('/test', function(req, res) {
+      res.send('Test Route');
+    });
+
+### Catch all methods
+    megaRouter.all('/*', function(req, res, next) {
+      console.log('catch-all engaged!');
+      next();
+    });
+
 ### One-time use route
     function singleUseRoute(req, res) {
       res.send('Single-use route!');
